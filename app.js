@@ -54,6 +54,7 @@ app.post('/scanned', function(req, res){
 	console.log("req obj is: ");
 	console.dir(req.body);
 
+  mongo.Db.connect(mongo_uri, function (err, db) {
 	db.collection('mydocs', function(er, collection) {
 		collection.insert(req.body, {safe: true}, function(er,rs) {
 			if (rs) {
@@ -62,6 +63,7 @@ app.post('/scanned', function(req, res){
 				console.log('Error: ' + er);
 			}
 		});
+	});
 	});
 	
 	res.send("hello");
