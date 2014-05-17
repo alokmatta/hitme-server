@@ -39,7 +39,7 @@ http.createServer(app).listen(app.get('port'), function(){
 	  
 		 var query = client.query('SELECT * FROM hitme_user;');
 		 console.log('**Running Query');
-		 console.dir('**query: ' + JSON.parse(query));
+		 console.log('**query: ' + JSON.parse(query));
 		 
 		 query.on('last_name', function(row) {
 			console.log('**About to show JSON stringy');
