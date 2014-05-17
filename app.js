@@ -66,4 +66,33 @@ app.post('/scanned', function(req, res){
 	
 	res.send("hello");
 });
-	 
+
+app.post('/buy', function(req, res){
+	console.log("User wants to BUY");
+	console.dir(req.body);
+
+  var d = new Date();
+  var hour = d.getHours();
+  var minutes = d.getMinutes();
+  var seconds = d.getSeconds();
+  var ts = hour + ":" + minutes + ":" + seconds;
+  console.log("The time is: " + ts);
+
+	var request = req.body;
+	request.wishlist = false;
+	request.timestamp = ts;
+
+  mongo.Db.connect(mongo_uri, function (err, db) {
+	db.collection('user_action', function(er, collection) {
+		collection.insert(request, {safe: true}, function(er,rs) {
+			if (rs) {
+				console.log('Success!' + rs);
+			} else  {
+				console.log('Error: ' + er);
+			}
+		});
+	});
+	});
+	
+	res.send("Bought: " + request["product_id"] + " by user: " + request["user_id"]);
+});
