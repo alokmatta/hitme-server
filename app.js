@@ -73,10 +73,10 @@ app.post('/scanned', function(req, res){
 	request.timestamp = ts;
 
   mongo.Db.connect(mongo_uri, function (err, db) {
-	db.collection('products', function(er, collection) {
+	db.collection('scanned', function(er, collection) {
 		collection.insert(request, {safe: true}, function(er,rs) {
 			if (rs) {
-				console.log('Success!' + rs);
+				console.log('Inserted into scanned table!' + rs);
 			} else  {
 				console.log('Error: ' + er);
 			}
@@ -84,16 +84,18 @@ app.post('/scanned', function(req, res){
 	});
 	});
 
-  	var response = {
-		"_id": {
-		"$oid": "5377916de4b0e6e62941c4f3"
-		},
-		"product_id": "101",
-		"product": "Multi-coloured t-shirt",
-		"cost": "£20.00"
-		}
-	
-	res.send(response);
+    mongo.Db.connect(mongo_uri, function (err, db) {
+	db.collection('products', function(er, collection) {
+		var query = {"product_id" : request["product_id"]};
+		collection.findOne(request, {safe: true}, function(er,rs) {
+			if (rs) {
+				res.send(rs);
+			} else  {
+				res.send("No such product found");
+			}
+		});
+	});
+	});
 });
 
 app.post('/buy', function(req, res){
