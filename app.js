@@ -86,7 +86,7 @@ app.post('/buy', function(req, res){
 	db.collection('user_action', function(er, collection) {
 		collection.insert(request, {safe: true}, function(er,rs) {
 			if (rs) {
-				console.log('Success!' + rs);
+				console.log('Success!');
 			} else  {
 				console.log('Error: ' + er);
 			}
@@ -95,4 +95,34 @@ app.post('/buy', function(req, res){
 	});
 	
 	res.send("Bought: " + request["product_id"] + " by user: " + request["user_id"]);
+});
+
+app.post('/wishlist', function(req, res){
+	console.log("User is POOR and wants to put in wishlist");
+	console.dir("Request: " + req.body);
+
+  var d = new Date();
+  var hour = d.getHours();
+  var minutes = d.getMinutes();
+  var seconds = d.getSeconds();
+  var ts = hour + ":" + minutes + ":" + seconds;
+  console.log("The time is: " + ts);
+
+	var request = req.body;
+	request.wishlist = true;
+	request.timestamp = ts;
+
+  mongo.Db.connect(mongo_uri, function (err, db) {
+	db.collection('user_action', function(er, collection) {
+		collection.insert(request, {safe: true}, function(er,rs) {
+			if (rs) {
+				console.log('Success!');
+			} else  {
+				console.log('Error: ' + er);
+			}
+		});
+	});
+	});
+	
+	res.send("Added to wishlist: " + request["product_id"] + " by user: " + request["user_id"]);
 });
