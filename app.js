@@ -8,8 +8,8 @@ var express = require('express')
   , user = require('./routes/user')
   , http = require('http')
   , path = require('path');
-  var pg   = require('pg');
 
+var pg = require('pg');
 var app = express();
 
 // all environments
