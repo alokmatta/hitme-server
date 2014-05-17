@@ -36,18 +36,6 @@ app.get('/users', user.list);
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
   console.log('**Server env variable is: ' + process.env.MONGOLAB_URI );
-
-  mongo.Db.connect(mongo_uri, function (err, db) {
-	db.collection('mydocs', function(er, collection) {
-		collection.insert({'mykey': 'myvalue'}, {safe: true}, function(er,rs) {
-			if (rs) {
-				console.log('Success!' + rs);
-			} else  {
-				console.log('Error: ' + er);
-			}
-		});
-	});
-});
 });
 
 app.post('/scanned', function(req, res){
