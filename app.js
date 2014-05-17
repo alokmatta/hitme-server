@@ -39,7 +39,7 @@ http.createServer(app).listen(app.get('port'), function(){
 	  
 		 var query = client.query('SELECT * FROM hitme_user;');
 		 console.log('**Running Query');
-		 console.log('**query: ' + JSON.parse(query));
+		 /*console.log('**query: ' + JSON.parse(query));*/
 		 
 		// done();
 		 
