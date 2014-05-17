@@ -91,41 +91,31 @@ app.post('/buy', function(req, res){
 	request.wishlist = false;
 	request.timestamp = ts;
 
-	var update = false;
-
   mongo.Db.connect(mongo_uri, function (err, db) {
 	db.collection('user_action', function(er, collection) {
 		var query = {"user_id" : request["user_id"], "product_id" : request["product_id"]};
 		collection.findOne(query, function(er, rs) {
 			if(rs) {
 				console.log('Found in user_action');
-				update = true;
+				collection.update(request, {"wishlist": true}, function(er,rs) {
+					if (rs) {
+						console.log('Updated!');
+					} else  {
+						console.log('Error: ' + er);
+					}
+				});
+				res.send("Moving from wishlist to Bought: " + request["product_id"] + " by user: " + request["user_id"]);
 			} else {
-				console.log('Error: ' + er);
+				collection.insert(request, {safe: true}, function(er,rs) {
+					if (rs) {
+						console.log('Inserted!');
+					} else  {
+						console.log('Error: ' + er);
+					}
+				});
+			res.send("Bought: " + request["product_id"] + " by user: " + request["user_id"]);
 			}
 		});
-
-		if (update) {
-			collection.update(request, {"wishlist": true}, function(er,rs) {
-				if (rs) {
-					console.log('Updated!');
-
-				} else  {
-					console.log('Error: ' + er);
-				}
-			});
-
-			res.send("Moving from wishlist to Bought: " + request["product_id"] + " by user: " + request["user_id"]);
-		} else {
-			collection.insert(request, {safe: true}, function(er,rs) {
-				if (rs) {
-					console.log('Inserted!');
-				} else  {
-					console.log('Error: ' + er);
-				}
-			});
-			res.send("Bought: " + request["product_id"] + " by user: " + request["user_id"]);
-		}
 	});
 
 
