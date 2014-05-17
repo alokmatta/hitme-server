@@ -43,8 +43,8 @@ http.createServer(app).listen(app.get('port'), function(){
 		 
 		// done();
 		 
-		 if(err) return console.error(err);
-		   console.log(query.rows);
+		 if(err) return console.error('err is: ' + err);
+		   console.log('query rows is' + query.rows);
 		});
 });
 
