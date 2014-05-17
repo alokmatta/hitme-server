@@ -141,6 +141,10 @@ app.post('/buy', function(req, res){
 				});
 				
 			} else {
+
+				// braintree shenangians!
+
+
 				collection.insert(request, {safe: true}, function(er,rs) {
 					if (rs) {
 						console.log('Inserted!');
