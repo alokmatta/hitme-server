@@ -52,7 +52,7 @@ http.createServer(app).listen(app.get('port'), function(){
 
 app.post('/scanned', function(req, res){
 	console.log("req obj is: ");
-	console.log(req);
+	console.dir(req.body);
 	
 	res.send("hello");
 });
