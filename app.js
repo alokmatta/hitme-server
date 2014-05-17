@@ -87,7 +87,7 @@ app.post('/scanned', function(req, res){
     mongo.Db.connect(mongo_uri, function (err, db) {
 	db.collection('products', function(er, collection) {
 		var query = {"product_id" : request["product_id"]};
-		collection.findOne(request, {safe: true}, function(er,rs) {
+		collection.findOne(query, {safe: true}, function(er,rs) {
 			if (rs) {
 				res.send(rs);
 			} else  {
