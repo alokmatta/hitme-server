@@ -33,7 +33,7 @@ app.get('/users', user.list);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
-  console.log(process.env.DATABASE_URL);
+  console.log('**Server env variable is: ' + process.env.DATABASE_URL);
 });
 
 /*pg.connect(process.env.DATABASE_URL, function(err, client) {
