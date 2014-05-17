@@ -100,9 +100,9 @@ app.post('/buy', function(req, res){
 
 
 				console.log('Found in user_action');
-				request.wishlist = true;
 				console.dir(request);
-				collection.update(request, {"wishlist": false}, function(er,rs) {
+				var secondQuery = {"user_id" : request["user_id"], "product_id" : request["product_id"], "wishlist" : true};
+				collection.update(secondQuery, {"wishlist": false}, function(er,rs) {
 					if (rs) {
 						console.log('Updated from true to false!');
 					} else  {
