@@ -10,6 +10,7 @@ var express = require('express')
   , path = require('path');
 
 var pg = require('pg');
+var mongo = require('mongodb');
 var app = express();
 
 // all environments
@@ -33,24 +34,25 @@ app.get('/users', user.list);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
-  console.log('**Server env variable is: ' + process.env.DATABASE_URL);
+  console.log('**Server env variable is: ' + process.env.MONGOLAB_URI );
   
-  pg.connect(process.env.DATABASE_URL, function(err, client) {
+/*  pg.connect(process.env.DATABASE_URL, function(err, client) {
 	  
 		 var query = client.query('SELECT * FROM hitme_user');
 		 console.log('**Running Query');
-		 /*console.log('**query: ' + JSON.parse(query));*/
+		 console.log('**query: ' + JSON.parse(query));
 		 
 		// done();
 		 
 		 if(err) return console.error('err is: ' + err);
+		 
 		 console.log('**no errors on query....');
 		 
 		 query.on('last_name', function(row) {
 			 console.log("inside query**");
 			   console.log(JSON.stringify(row));
 			 });
-		});
+		});*/
 });
 
 
