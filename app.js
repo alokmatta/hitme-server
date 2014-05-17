@@ -38,8 +38,9 @@ http.createServer(app).listen(app.get('port'), function(){
 
 pg.connect(process.env.DATABASE_URL, function(err, client) {
 	 var query = client.query('SELECT * FROM hitme_user;');
-	 
+	 console.log('**Running Query');
 	 query.on('last_name', function(row) {
+		console.log('**About to show JSON stringy');
 	   console.log(JSON.stringify(row));
 	 });
 	});
