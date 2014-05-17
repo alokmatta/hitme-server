@@ -72,13 +72,33 @@ app.post('/scanned', function(req, res){
   console.log("The time is: " + ts);
 
 	var request = req.body;
-	request.timestamp = ts;
 
   mongo.Db.connect(mongo_uri, function (err, db) {
 	db.collection('scanned', function(er, collection) {
+		var scanned_details;
+		scanned_details.user_id = request["user_id"];
+		scanned_details.product_id = request["product_id"];
+		scanned_details.timestamp = ts;
 		collection.insert(request, {safe: true}, function(er,rs) {
 			if (rs) {
 				console.log('Inserted into scanned table!' + rs);
+			} else  {
+				console.log('Error: ' + er);
+			}
+		});
+	});
+	});
+
+    mongo.Db.connect(mongo_uri, function (err, db) {
+	db.collection('user_location', function(er, collection) {
+		var location_details;
+		location_details.user_id = request["user_id"];
+		location_details.latitude = request["latitude"];
+		location_details.longitude = request["longitude"];
+		location_details.timestamp = ts;
+		collection.insert(location_details, {safe: true}, function(er,rs) {
+			if (rs) {
+				console.log('Inserted into user_location table!' + rs);
 			} else  {
 				console.log('Error: ' + er);
 			}
