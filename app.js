@@ -82,8 +82,19 @@ app.post('/buy', function(req, res){
 	request.wishlist = false;
 	request.timestamp = ts;
 
+
+
   mongo.Db.connect(mongo_uri, function (err, db) {
 	db.collection('user_action', function(er, collection) {
+		var query = {"user_id" : request["user_id"], "product_id" : request["product_id"]};
+		collection.findOne(query, function(er, rs) {
+			if(rs) {
+				console.log('Found in user_action');
+			} else {
+				console.log('Error: ' + er);
+			}
+		});
+
 		collection.insert(request, {safe: true}, function(er,rs) {
 			if (rs) {
 				console.log('Success!');
@@ -92,6 +103,8 @@ app.post('/buy', function(req, res){
 			}
 		});
 	});
+
+
 	});
 	
 	res.send("Bought: " + request["product_id"] + " by user: " + request["user_id"]);
@@ -99,7 +112,7 @@ app.post('/buy', function(req, res){
 
 app.post('/wishlist', function(req, res){
 	console.log("User is POOR and wants to put in wishlist");
-	console.dir("Request: " + req.body);
+	console.dir(req.body);
 
   var d = new Date();
   var hour = d.getHours();
