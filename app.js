@@ -36,11 +36,11 @@ http.createServer(app).listen(app.get('port'), function(){
   console.log(process.env.DATABASE_URL);
 });
 
-/*pg.connect(process.env.DATABASE_URL, function(err, client) {
+pg.connect(process.env.DATABASE_URL, function(err, client) {
 	 var query = client.query('SELECT * FROM hitme_user;');
 	 
 	 query.on('last_name', function(row) {
 	   console.log(JSON.stringify(row));
 	 });
-	});*/
+	});
 	 
