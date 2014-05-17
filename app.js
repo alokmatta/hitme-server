@@ -39,7 +39,8 @@ http.createServer(app).listen(app.get('port'), function(){
   var d = new Date();
   var hour = d.getHours();
   var minutes = d.getMinutes();
-  console.log("The time is: " + hour + ":" + minutes);
+  var seconds = d.getSeconds();
+  console.log("The time is: " + hour + ":" + minutes + ":" + seconds);
 });
 
 app.post('/scanned', function(req, res){
