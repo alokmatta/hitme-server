@@ -37,7 +37,7 @@ http.createServer(app).listen(app.get('port'), function(){
   
   pg.connect(process.env.DATABASE_URL, function(err, client) {
 	  
-		 var query = client.query('SELECT * FROM hitme_user;');
+		 var query = client.query('SELECT * FROM hitme_user');
 		 console.log('**Running Query');
 		 /*console.log('**query: ' + JSON.parse(query));*/
 		 
