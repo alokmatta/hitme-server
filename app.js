@@ -63,8 +63,17 @@ app.post('/scanned', function(req, res){
 		});
 	});
 	});
+
+  	var response = {
+		"_id": {
+		"$oid": "5377916de4b0e6e62941c4f3"
+		},
+		"product_id": "101",
+		"product": "Multi-coloured t-shirt",
+		"cost": "£20.00"
+		}
 	
-	res.send("hello");
+	res.send(response);
 });
 
 app.post('/buy', function(req, res){
