@@ -41,10 +41,10 @@ http.createServer(app).listen(app.get('port'), function(){
 		 console.log('**Running Query');
 		 console.log('**query: ' + JSON.parse(query));
 		 
-		 query.on('last_name', function(row) {
-			console.log('**About to show JSON stringy');
-		   console.log(JSON.stringify(row));
-		 });
+		// done();
+		 
+		 if(err) return console.error(err);
+		   console.log(query.rows);
 		});
 });
 
