@@ -155,12 +155,11 @@ app.post('/wishlist', function(req, res){
 		collection.insert(request, {safe: true}, function(er,rs) {
 			if (rs) {
 				console.log('Success!');
+				res.send("Added to wishlist: " + request["product_id"] + " by user: " + request["user_id"]);
 			} else  {
 				console.log('Error: ' + er);
 			}
 		});
 	});
 	});
-	
-	res.send("Added to wishlist: " + request["product_id"] + " by user: " + request["user_id"]);
 });
