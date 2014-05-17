@@ -53,6 +53,16 @@ http.createServer(app).listen(app.get('port'), function(){
 app.post('/scanned', function(req, res){
 	console.log("req obj is: ");
 	console.dir(req.body);
+
+	db.collection('mydocs', function(er, collection) {
+		collection.insert(req.body, {safe: true}, function(er,rs) {
+			if (rs) {
+				console.log('Success!' + rs);
+			} else  {
+				console.log('Error: ' + er);
+			}
+		});
+	});
 	
 	res.send("hello");
 });
