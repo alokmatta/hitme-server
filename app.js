@@ -38,6 +38,26 @@ http.createServer(app).listen(app.get('port'), function(){
   console.log('**Server env variable is: ' + process.env.MONGOLAB_URI );
 });
 
+app.post('/add', function(req, res){
+	console.log("req obj is: ");
+	console.dir(req.body);
+
+	var request = req.body;
+
+  mongo.Db.connect(mongo_uri, function (err, db) {
+	db.collection('products', function(er, collection) {
+		collection.insert(request, {safe: true}, function(er,rs) {
+			if (rs) {
+				console.log('Inserted into products table!' + rs);
+			} else  {
+				console.log('Error: ' + er);
+			}
+		});
+	});
+	});
+	res.send("Inserted Successfully");
+});
+
 app.post('/scanned', function(req, res){
 	console.log("req obj is: ");
 	console.dir(req.body);
@@ -53,7 +73,7 @@ app.post('/scanned', function(req, res){
 	request.timestamp = ts;
 
   mongo.Db.connect(mongo_uri, function (err, db) {
-	db.collection('mydocs', function(er, collection) {
+	db.collection('products', function(er, collection) {
 		collection.insert(request, {safe: true}, function(er,rs) {
 			if (rs) {
 				console.log('Success!' + rs);
@@ -132,10 +152,8 @@ app.post('/buy', function(req, res){
 	});
 
 
-	});
-	
-	
-});
+	}); //ending mongodb.connect
+}); // ending buy post request
 
 app.post('/wishlist', function(req, res){
 	console.log("User is POOR and wants to put in wishlist");
@@ -171,5 +189,5 @@ app.post('/wishlist', function(req, res){
 			}
 		});
 	});
-	});
-});
+	}); //ending mongodb.connect
+}); // ending wishlist post request
