@@ -35,6 +35,18 @@ app.get('/users', user.list);
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
   console.log('**Server env variable is: ' + process.env.MONGOLAB_URI );
+
+  mongo.Db.connect(mongoUri, function (err, db) {
+	db.collection('mydocs', function(er, collection) {
+		collection.insert({'mykey': 'myvalue'}, {safe: true}, function(er,rs) {
+			if (rs) {
+				console.log('Success!' + rs);
+			} else  {
+				console.log('Error: ' + er);
+			}
+		});
+	});
+});
   
 /*  pg.connect(process.env.DATABASE_URL, function(err, client) {
 	  
@@ -54,15 +66,4 @@ http.createServer(app).listen(app.get('port'), function(){
 			 });
 		});*/
 });
-
-
-
-pg.connect(process.env.DATABASE_URL, function(err, client) {
-	 var query = client.query('SELECT * FROM hitme_user;');
-	 console.log('**Running Query');
-	 query.on('last_name', function(row) {
-		console.log('**About to show JSON stringy');
-	   console.log(JSON.stringify(row));
-	 });
-	});
 	 
