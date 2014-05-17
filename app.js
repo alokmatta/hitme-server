@@ -47,7 +47,7 @@ app.post('/scanned', function(req, res){
   var minutes = d.getMinutes();
   var seconds = d.getSeconds();
   var ts = hour + ":" + minutes + ":" + seconds;
-  console.log("The time is: " + );
+  console.log("The time is: " + ts);
 
 	var request = req.body;
 	request.timestamp = ts;
