@@ -140,6 +140,8 @@ app.post('/wishlist', function(req, res){
 	request.wishlist = true;
 	request.timestamp = ts;
 
+	var insert = true;
+
   mongo.Db.connect(mongo_uri, function (err, db) {
 	db.collection('user_action', function(er, collection) {
 		var query = {"user_id" : request["user_id"], "product_id" : request["product_id"]};
@@ -147,19 +149,22 @@ app.post('/wishlist', function(req, res){
 			if(rs) {
 				console.log('Found in user_action');
 				res.send("This is already in your wishlist... go and get some MONEY!"); 
+				insert = false;
 			} else {
 				console.log('Error: ' + er);
 			}
 		});
 
-		collection.insert(request, {safe: true}, function(er,rs) {
-			if (rs) {
-				console.log('Success!');
-				res.send("Added to wishlist: " + request["product_id"] + " by user: " + request["user_id"]);
-			} else  {
-				console.log('Error: ' + er);
-			}
-		});
+		if(insert) {
+			collection.insert(request, {safe: true}, function(er,rs) {
+				if (rs) {
+					console.log('Success!');
+					res.send("Added to wishlist: " + request["product_id"] + " by user: " + request["user_id"]);
+				} else  {
+					console.log('Error: ' + er);
+				}
+			});
+		}
 	});
 	});
 });
