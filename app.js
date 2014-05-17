@@ -44,7 +44,10 @@ http.createServer(app).listen(app.get('port'), function(){
 		// done();
 		 
 		 if(err) return console.error('err is: ' + err);
-		   console.log('query rows is' + query.rows);
+		 console.log('**no errors on query....');
+		 query.on('last_name', function(row) {
+			   console.log(JSON.stringify(row));
+			 });
 		});
 });
 
