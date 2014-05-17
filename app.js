@@ -75,7 +75,7 @@ app.post('/scanned', function(req, res){
 
   mongo.Db.connect(mongo_uri, function (err, db) {
 	db.collection('scanned', function(er, collection) {
-		var scanned_details;
+		var scanned_details = {};
 		scanned_details.user_id = request["user_id"];
 		scanned_details.product_id = request["product_id"];
 		scanned_details.timestamp = ts;
@@ -91,7 +91,7 @@ app.post('/scanned', function(req, res){
 
     mongo.Db.connect(mongo_uri, function (err, db) {
 	db.collection('user_location', function(er, collection) {
-		var location_details;
+		var location_details= {};
 		location_details.user_id = request["user_id"];
 		location_details.latitude = request["latitude"];
 		location_details.longitude = request["longitude"];
