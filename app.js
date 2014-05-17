@@ -36,20 +36,25 @@ app.get('/users', user.list);
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
   console.log('**Server env variable is: ' + process.env.MONGOLAB_URI );
-  var d = new Date();
-  var hour = d.getHours();
-  var minutes = d.getMinutes();
-  var seconds = d.getSeconds();
-  console.log("The time is: " + hour + ":" + minutes + ":" + seconds);
 });
 
 app.post('/scanned', function(req, res){
 	console.log("req obj is: ");
 	console.dir(req.body);
 
+  var d = new Date();
+  var hour = d.getHours();
+  var minutes = d.getMinutes();
+  var seconds = d.getSeconds();
+  var ts = hour + ":" + minutes + ":" + seconds;
+  console.log("The time is: " + );
+
+	var request = req.body;
+	request.timestamp = ts;
+
   mongo.Db.connect(mongo_uri, function (err, db) {
 	db.collection('mydocs', function(er, collection) {
-		collection.insert(req.body, {safe: true}, function(er,rs) {
+		collection.insert(request, {safe: true}, function(er,rs) {
 			if (rs) {
 				console.log('Success!' + rs);
 			} else  {
