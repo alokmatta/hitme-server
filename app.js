@@ -101,6 +101,7 @@ app.post('/buy', function(req, res){
 
 				console.log('Found in user_action');
 				request.wishlist = true;
+				console.dir(request);
 				collection.update(request, {"wishlist": false}, function(er,rs) {
 					if (rs) {
 						console.log('Updated from true to false!');
