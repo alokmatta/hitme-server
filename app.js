@@ -36,8 +36,10 @@ app.get('/users', user.list);
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
   console.log('**Server env variable is: ' + process.env.MONGOLAB_URI );
-  var seconds = new Date().getHours();
-  console.log("Seconds: " + seconds);
+  var d = new Date();
+  var hour = nd.getHours();
+  var minutes = d.getMinutes();
+  console.log("Seconds: " + hour + ":" + minutes);
 });
 
 app.post('/scanned', function(req, res){
