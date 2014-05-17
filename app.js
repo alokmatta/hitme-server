@@ -11,6 +11,8 @@ var express = require('express')
 
 var pg = require('pg');
 var mongo = require('mongodb');
+var braintree = require('braintree');
+
 var app = express();
 var mongo_uri = process.env.MONGOLAB_URI;
 
