@@ -7,7 +7,8 @@ var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
   , http = require('http')
-  , path = require('path');
+  , path = require('path')
+  , pg   = require('pg');
 
 var app = express();
 
@@ -32,4 +33,14 @@ app.get('/users', user.list);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
+  console.log(process.env.DATABASE_URL);
 });
+
+pg.connect(process.env.DATABASE_URL, function(err, client) {
+	 var query = client.query('SELECT * FROM hitme_user;');
+	 
+	 query.on('last_name', function(row) {
+	   console.log(JSON.stringify(row));
+	 });
+	});
+	 
