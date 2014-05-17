@@ -96,15 +96,26 @@ app.post('/buy', function(req, res){
 		var query = {"user_id" : request["user_id"], "product_id" : request["product_id"]};
 		collection.findOne(query, function(er, rs) {
 			if(rs) {
+
+
+
 				console.log('Found in user_action');
-				collection.update(request, {"wishlist": true}, function(er,rs) {
+				request.wishlist = true;
+				collection.update(request, {"wishlist": false}, function(er,rs) {
 					if (rs) {
-						console.log('Updated!');
+						console.log('Updated from true to false!');
 					} else  {
 						console.log('Error: ' + er);
 					}
 				});
 				res.send("Moving from wishlist to Bought: " + request["product_id"] + " by user: " + request["user_id"]);
+			
+
+
+
+
+
+
 			} else {
 				collection.insert(request, {safe: true}, function(er,rs) {
 					if (rs) {
