@@ -164,6 +164,7 @@ app.post('/wishlist', function(req, res){
 			}
 		});
 
+		console.log('Result: ' + insert);
 		if(insert) {
 			collection.insert(request, {safe: true}, function(er,rs) {
 				if (rs) {
