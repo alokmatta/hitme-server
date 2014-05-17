@@ -12,6 +12,7 @@ var express = require('express')
 var pg = require('pg');
 var mongo = require('mongodb');
 var app = express();
+var mongo_uri = process.env.MONGOLAB_URI;
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -36,7 +37,7 @@ http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
   console.log('**Server env variable is: ' + process.env.MONGOLAB_URI );
 
-  mongo.Db.connect(mongoUri, function (err, db) {
+  mongo.Db.connect(mongo_uri, function (err, db) {
 	db.collection('mydocs', function(er, collection) {
 		collection.insert({'mykey': 'myvalue'}, {safe: true}, function(er,rs) {
 			if (rs) {
