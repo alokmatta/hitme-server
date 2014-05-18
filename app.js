@@ -203,7 +203,7 @@ app.post('/buy', function(req, res){
 	  collection.findOne(query, function(er, rs) {
 		  if (rs){ // if user_id exists then increment number of buys by 1
 			  console.log("Found user data in achievements collection");
-			  collection.update(rs, {"$inc":{"rs.$.number_of_buys":1}}, function(er, rs){
+			  collection.update(rs, {"$inc":{"number_of_buys":1}}, function(er, rs){
 				  if (rs)
 					  console.log("Updated number of buys of user");
 				  else
