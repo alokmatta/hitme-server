@@ -8,7 +8,7 @@ var express = require('express')
   , user = require('./routes/user')
   , http = require('http')
   , path = require('path');
-
+	
 var pg = require('pg');
 var mongo = require('mongodb');
 var braintree = require('braintree');
@@ -37,28 +37,34 @@ app.get('/users', user.list);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
-  console.log('**Server env variable is: ' + process.env.MONGOLAB_URI );
-});
+  console.log('**Database env variable is: ' + process.env.MONGOLAB_URI );
+}); 
 
 app.post('/add', function(req, res){
-	console.log("req obj is: ");
-	console.dir(req.body);
+  console.log("req obj is: ");
+  console.dir(req.body);
 
-	var request = req.body;
+  var request = req.body;
 
   mongo.Db.connect(mongo_uri, function (err, db) {
 	db.collection('products', function(er, collection) {
 		collection.insert(request, {safe: true}, function(er,rs) {
 			if (rs) {
+				res.send("Inserted Successfully");
 				console.log('Inserted into products table!' + rs);
 			} else  {
-				console.log('Error: ' + er);
+				if (err) {
+					console.log('Error: ' + er);
+					res.send(err);
+				} else {
+					console.log("No response from database");
+					res.send("No response from insertion query");
+				}
 			}
-		});
-	});
-	});
-	res.send("Inserted Successfully");
-});
+		}); //end of collection.insert
+	}); //end of db.collection 
+  }); //end of mongo.Db.connect
+}); //end of post /add
 
 app.post('/scanned', function(req, res){
 	console.log("req obj is: ");
@@ -71,7 +77,7 @@ app.post('/scanned', function(req, res){
   var ts = hour + ":" + minutes + ":" + seconds;
   console.log("The time is: " + ts);
 
-	var request = req.body;
+  var request = req.body;
 
   mongo.Db.connect(mongo_uri, function (err, db) {
 	db.collection('scanned', function(er, collection) {
@@ -85,40 +91,42 @@ app.post('/scanned', function(req, res){
 			} else  {
 				console.log('Error: ' + er);
 			}
-		});
-	});
-	});
+		}); // end collection.insert
+	 }); // end of db.collection
+	}); // end of mongo.db.connect
 
     mongo.Db.connect(mongo_uri, function (err, db) {
-	db.collection('user_location', function(er, collection) {
-		var location_details= {};
-		location_details.user_id = request["user_id"];
-		location_details.latitude = request["latitude"];
-		location_details.longitude = request["longitude"];
-		location_details.timestamp = ts;
-		collection.insert(location_details, {safe: true}, function(er,rs) {
-			if (rs) {
-				console.log('Inserted into user_location table!' + rs);
-			} else  {
-				console.log('Error: ' + er);
-			}
-		});
-	});
-	});
+		db.collection('user_location', function(er, collection) {
+			var location_details= {};
+			location_details.user_id = request["user_id"];
+			location_details.latitude = request["latitude"];
+			location_details.longitude = request["longitude"];
+			location_details.timestamp = ts;
+			collection.insert(location_details, {safe: true}, function(er,rs) {
+				if (rs) {
+					console.log('Inserted into user_location table!')
+					console.dir(rs);
+				} else  {
+					console.log('Error: ' + er);
+				}
+			}); // end of collection.insert
+		}); // end of db.collection
+	}); // end of mongo.db.connect
 
     mongo.Db.connect(mongo_uri, function (err, db) {
-	db.collection('products', function(er, collection) {
-		var query = {"product_id" : request["product_id"]};
-		collection.findOne(query, function(er,rs) {
-			if (rs) {
-				res.send(rs);
-			} else  {
-				res.send("No such product found");
-			}
-		});
-	});
-	});
-});
+		db.collection('products', function(er, collection) {
+			var query = {"product_id" : request["product_id"]};
+			collection.findOne(query, function(er,rs) {
+				if (rs) {
+					res.send(rs);
+				} else  {
+					res.send("No such product found");
+				}
+			});
+	   }); // end of db.collection
+   }); // end of mongo.db.connect
+    
+}); // end of post /scanned
 
 app.post('/buy', function(req, res){
 	console.log("User wants to BUY");
@@ -179,13 +187,12 @@ app.post('/buy', function(req, res){
 		});
 	});
 
-
-	}); //ending mongodb.connect
-}); // ending buy post request
+  }); //ending mongodb.connect
+}); // end of post /buy
 
 app.post('/wishlist', function(req, res){
-	console.log("User is POOR and wants to put in wishlist");
-	console.dir(req.body);
+  console.log("User is POOR and wants to put in wishlist");
+  console.dir(req.body);
 
   var d = new Date();
   var hour = d.getHours();
@@ -194,9 +201,9 @@ app.post('/wishlist', function(req, res){
   var ts = hour + ":" + minutes + ":" + seconds;
   console.log("The time is: " + ts);
 
-	var request = req.body;
-	request.wishlist = true;
-	request.timestamp = ts;
+  var request = req.body;
+  request.wishlist = true;
+  request.timestamp = ts;
 
   mongo.Db.connect(mongo_uri, function (err, db) {
 	db.collection('user_action', function(er, collection) {
@@ -217,5 +224,5 @@ app.post('/wishlist', function(req, res){
 			}
 		});
 	});
-	}); //ending mongodb.connect
+  }); //ending mongodb.connect
 }); // ending wishlist post request
