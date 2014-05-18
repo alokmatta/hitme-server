@@ -112,9 +112,16 @@ app.post('/scanned', function(req, res){
 			}); // end of collection.insert
 		}); // end of db.collection
 	}); // end of mongo.db.connect
+    
+    
 
     mongo.Db.connect(mongo_uri, function (err, db) {
-		db.collection('products', function(er, collection) {
+    	
+     db.collection('achievements'), function(er, collection) {
+    	 
+     }
+    	
+	  db.collection('products', function(er, collection) {
 			var query = {"product_id" : request["product_id"]};
 			collection.findOne(query, function(er,rs) {
 				if (rs) {
@@ -124,13 +131,16 @@ app.post('/scanned', function(req, res){
 				}
 			});
 	   }); // end of db.collection
+		
+		
+		
    }); // end of mongo.db.connect
     
 }); // end of post /scanned
 
 app.post('/buy', function(req, res){
-	console.log("User wants to BUY");
-	console.dir(req.body);
+  console.log("User wants to BUY");
+  console.dir(req.body);
 
   var d = new Date();
   var hour = d.getHours();
@@ -139,11 +149,12 @@ app.post('/buy', function(req, res){
   var ts = hour + ":" + minutes + ":" + seconds;
   console.log("The time is: " + ts);
 
-	var request = req.body;
-	request.wishlist = false;
-	request.timestamp = ts;
+  var request = req.body;
+  request.wishlist = false;
+  request.timestamp = ts;
 
   mongo.Db.connect(mongo_uri, function (err, db) {
+	  
 	db.collection('user_action', function(er, collection) {
 		var query = {"user_id" : request["user_id"], "product_id" : request["product_id"]};
 		collection.findOne(query, function(er, rs) {
@@ -174,7 +185,6 @@ app.post('/buy', function(req, res){
 
 				// braintree shenangians!
 
-
 				collection.insert(request, {safe: true}, function(er,rs) {
 					if (rs) {
 						console.log('Inserted!');
@@ -185,9 +195,37 @@ app.post('/buy', function(req, res){
 			res.send("Bought: " + request["product_id"] + " by user: " + request["user_id"]);
 			}
 		});
-	});
-
-  }); //ending mongodb.connect
+	}); //end of db.collection user_action
+	
+  db.collection('achievements', function(er, collection) {
+	  var query = {"user_id" : request["user_id"]};
+	
+	  collection.findOne(query, function(er, rs) {
+		  if (rs){ // if user_id exists then increment number of buys by 1
+			  console.log("Found user data in achievements collection");
+			  collection.update(rs, {"$inc":{"rs.$.number_of_buys":1}}, function(er, rs){
+				  if (rs)
+					  console.log("Updated number of buys of user");
+				  else
+					  console.log("Did not update")
+				
+				  if (er)
+					  console.log("Achievements increment error");
+			  });
+		  } else {
+			  var query = {"user_id" : request["user_id"], "number_of_buys" : 0};
+			  collection.insert(query, function(er, rs){
+				 if (rs) 
+					 console.log("Inserted user into achievements collection with 0 buys");  
+			  });
+		  }
+	  }); // end of findOne
+	  
+	  
+	  
+  }); // end of collection.achievements
+  
+  }); // end mongodb.connect
 }); // end of post /buy
 
 app.post('/wishlist', function(req, res){
@@ -226,3 +264,8 @@ app.post('/wishlist', function(req, res){
 	});
   }); //ending mongodb.connect
 }); // ending wishlist post request
+
+app.post('/eastertime', function(req, res){
+	console.log("Easter!");
+	res.send("Easter");
+})
