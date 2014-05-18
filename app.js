@@ -12,6 +12,7 @@ var express = require('express')
 var pg = require('pg');
 var mongo = require('mongodb');
 var braintree = require('braintree');
+var requestModule = require('request');
 
 var app = express();
 var mongo_uri = process.env.MONGOLAB_URI;
@@ -117,10 +118,6 @@ app.post('/scanned', function(req, res){
 
     mongo.Db.connect(mongo_uri, function (err, db) {
     	
-     db.collection('achievements'), function(er, collection) {
-    	 
-     }
-    	
 	  db.collection('products', function(er, collection) {
 			var query = {"product_id" : request["product_id"]};
 			collection.findOne(query, function(er,rs) {
@@ -161,7 +158,7 @@ app.post('/buy', function(req, res){
   var request = req.body;
   request.wishlist = false;
   request.timestamp = ts;
-
+  
   mongo.Db.connect(mongo_uri, function (err, db) {
 	  
 	db.collection('user_action', function(er, collection) {
@@ -211,8 +208,25 @@ app.post('/buy', function(req, res){
 	
 	  collection.findOne(query, function(er, rs) {
 		  if (rs){ // if user_id exists then increment number of buys by 1
+			  
+			  //Updated leaderboard logic goes beneath here
+			  var userid = rs.user_id;
+			  var numberOfBuys = rs.number_if_buys + 1;
+			  var leaderboardURL = 'http://dreamlo.com/lb/AGVawZucEEypBXbXVZQuCwJID-SxOq_UqVXfLUO78gIw/add/' + userid + '/' + numberOfBuys;
+			  
+			  console.log('**LEADERBOARD**** user id is: ' + userid);
+			  console.log('**LEADERBOARD** num of buys is: ' + numberOfBuys);
+			  console.log('**LEADERBOARD** URL: ' + leaderboardURL
+					  );
+			 /* requestModule(leaderboardURL, function (error, response, body) {
+				  if (!error && response.statusCode == 200) {
+				    console.log(body) // Print the google web page.
+				  }
+				})*/
+			  
 			  console.log("Found user data in achievements collection");
 			  collection.update(rs, {"$inc":{"number_of_buys":1}}, function(er, rs){
+				  
 				  if (rs)
 					  console.log("Updated number of buys of user");
 				  else
@@ -274,7 +288,12 @@ app.post('/wishlist', function(req, res){
   }); //ending mongodb.connect
 }); // ending wishlist post request
 
-app.post('/eastertime', function(req, res){
+app.get('/leaderboard', function(req, res){
+	
+	res.send("Leaderboard");
+})
+
+app.get('/pandapunch', function(req, res){
 	console.log("Easter!");
 	res.send("Easter");
 })
