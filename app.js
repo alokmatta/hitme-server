@@ -12,7 +12,6 @@ var express = require('express')
 var pg = require('pg');
 var mongo = require('mongodb');
 var braintree = require('braintree');
-var requestModule = require('request');
 
 var app = express();
 var mongo_uri = process.env.MONGOLAB_URI;
@@ -207,23 +206,7 @@ app.post('/buy', function(req, res){
 	  var query = {"user_id" : request["user_id"]};
 	
 	  collection.findOne(query, function(er, rs) {
-		  if (rs){ // if user_id exists then increment number of buys by 1
-			  
-			  //Updated leaderboard logic goes beneath here
-			  var userid = rs.user_id;
-			  var numberOfBuys = rs.number_of_buys ;
-			  var leaderboardURL = 'http://dreamlo.com/lb/AGVawZucEEypBXbXVZQuCwJID-SxOq_UqVXfLUO78gIw/add/' + userid + '/' + numberOfBuys;
-			  
-			  console.log('**LEADERBOARD**** user id is: ' + userid);
-			  console.log('**LEADERBOARD** num of buys is: ' + numberOfBuys);
-			  console.log('**LEADERBOARD** URL: ' + leaderboardURL
-					  );
-			 /* requestModule(leaderboardURL, function (error, response, body) {
-				  if (!error && response.statusCode == 200) {
-				    console.log(body) // Print the google web page.
-				  }
-				})*/
-			  
+		  if (rs){ // if user_id exists then increment number of buys by 1		  
 			  console.log("Found user data in achievements collection");
 			  collection.update(rs, {"$inc":{"number_of_buys":1}}, function(er, rs){
 				  
