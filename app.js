@@ -172,13 +172,13 @@ app.post('/buy', function(req, res){
 				collection.update(secondQuery, request, function(er,rs) {
 					if (rs) {
 						console.log('Updated from true to false!');
-						res.send("Moving from wishlist to Bought: " + request["product_id"] + " by user: " + request["user_id"]);
+						res.send("{ Message : Moving from wishlist to Bought: " + request["product_id"] + " by user: " + request["user_id"] + "}");
 					} else  {
 						request.timestamp = ts;
 						collection.insert(request, {safe: true}, function(er,rs) {
 						if (rs) {
 							console.log('New user buy entry in user_action!');
-							res.send("Buying again!");
+							res.send("{ Message : Buying again! }");
 						} else  {
 							console.log('Error: ' + er);
 						}
@@ -197,7 +197,7 @@ app.post('/buy', function(req, res){
 						console.log('Error: ' + er);
 					}
 				});
-			res.send("Bought: " + request["product_id"] + " by user: " + request["user_id"]);
+			res.send("{ Message : Bought: " + request["product_id"] + " by user: " + request["user_id"] + "}");
 			}
 		});
 	}); //end of db.collection user_action
@@ -255,12 +255,12 @@ app.post('/wishlist', function(req, res){
 		collection.findOne(query, function(er, rs) {
 			if(rs) {
 				console.log('Found in user_action');
-				res.send("This is already in your wishlist... go and get some MONEY!"); 
+				res.send("{ Message : This is already in your wishlist... go and get some MONEY! }"); 
 			} else {
 				collection.insert(request, {safe: true}, function(er,rs) {
 					if (rs) {
 						console.log('Success!');
-						res.send("Added to wishlist: " + request["product_id"] + " by user: " + request["user_id"]);
+						res.send("{ Message : Added to wishlist: " + request["product_id"] + " by user: " + request["user_id"] + "}");
 					} else  {
 						console.log('Error: ' + er);
 					}
