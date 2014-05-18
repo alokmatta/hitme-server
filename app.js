@@ -130,10 +130,11 @@ app.post('/scanned', function(req, res){
 						collection.findOne(req['user_id'], function(er, result){
 							var numOfBuys = result['number_of_buys'];
 							rs.number_of_buys = numOfBuys;
+							res.send(rs);
 						});
 					});
 					
-					res.send(rs);
+					//res.send(rs);
 				} else  {
 					res.send("No such product found");
 				}
