@@ -211,7 +211,7 @@ app.post('/buy', function(req, res){
 			  
 			  //Updated leaderboard logic goes beneath here
 			  var userid = rs.user_id;
-			  var numberOfBuys = rs.number_if_buys + 1;
+			  var numberOfBuys = rs.number_of_buys ;
 			  var leaderboardURL = 'http://dreamlo.com/lb/AGVawZucEEypBXbXVZQuCwJID-SxOq_UqVXfLUO78gIw/add/' + userid + '/' + numberOfBuys;
 			  
 			  console.log('**LEADERBOARD**** user id is: ' + userid);
