@@ -125,6 +125,14 @@ app.post('/scanned', function(req, res){
 			var query = {"product_id" : request["product_id"]};
 			collection.findOne(query, function(er,rs) {
 				if (rs) {
+					
+					db.collection('achievements', function(er, collection){
+						collection.findOne(req['user_id'], function(er, result){
+							var numOfBuys = result['number_of_buys'];
+							rs.number_of_buys = numOfBuys;
+						});
+					});
+					
 					res.send(rs);
 				} else  {
 					res.send("No such product found");
@@ -172,7 +180,7 @@ app.post('/buy', function(req, res){
 						request.timestamp = ts;
 						collection.insert(request, {safe: true}, function(er,rs) {
 						if (rs) {
-							console.log('New Entry!');
+							console.log('New user buy entry in user_action!');
 							res.send("Buying again!");
 						} else  {
 							console.log('Error: ' + er);
